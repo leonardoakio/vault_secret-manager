@@ -1,0 +1,25 @@
+version: '3.8'
+
+services:
+  vault:
+    image: vault:1.13.3
+    container_name: vault
+    environment:
+      VAULT_ADDR: http://127.0.0.1:8200
+    ports:
+      - "8200:8200"
+    volumes:
+      - vault_data:/vault/file
+      - ./vault.json:/vault/config/vault.json
+    cap_add:
+      - IPC_LOCK
+    entrypoint: vault server -config=/vault/config/vault.json
+    networks:
+      - kong-net
+
+volumes:
+  vault_data:
+
+networks:
+  kong-net:
+    external: true
